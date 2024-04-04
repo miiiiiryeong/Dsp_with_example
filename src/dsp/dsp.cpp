@@ -26,11 +26,15 @@ Dsp::Dsp(ros::NodeHandle nh, ros::NodeHandle nh_private) :
     if (!nh_private_.getParam ("use_3d", use_3d_))
         use_3d_ = true;
     if (!nh_private_.getParam ("odom_topic", odom_topic_))
-        odom_topic_ = "pixy/truth/NWU";
+        // original
+        // odom_topic_ = "pixy/truth/NWU";
+        // edited
+        // need to set odom topic name
+        odom_topic_ = "odometry/imu";
     if (!nh_private_.getParam ("odom_frame_id", odom_frame_id_))
         odom_frame_id_ = "odom";
     if (!nh_private_.getParam ("base_link_frame", base_link_frame_))
-        base_link_frame_ = "base_link";
+        base_link_frame_ = "velodyne";
     if (!nh_private_.getParam ("unknown_value", DSP_UNKNOWN))
         DSP_UNKNOWN = 10000;
     if (!nh_private_.getParam ("update_rate", RATE))
@@ -474,6 +478,7 @@ void Dsp::handleSetStart(const geometry_msgs::PointConstPtr& msg)
 
 void Dsp::setTfStart(){
     //std::cout<<"11"<<std::endl;
+    // original
     tf::StampedTransform transform;
     try {
         tran->lookupTransform(odom_frame_id_, base_link_frame_, ros::Time(0.0), transform);
@@ -487,6 +492,19 @@ void Dsp::setTfStart(){
     if(!use_3d_)
         wpos[2] = 0.0;
     setStart(wpos);
+
+    // // world <-> base_link!
+    // static tf::TransformBroadcaster br;
+    // tf::Transform transform_2;
+
+    // // set transform info.
+    // transform_2.setOrigin(tf::Vector3(transform.getOrigin().x(),
+    //     transform.getOrigin().y(),
+    //     transform.getOrigin().z()));
+
+    // // send transform
+    // ros::Time now = ros::Time::now();
+    // br.sendTransform(tf::StampedTransform(transform_2, now, "world", "base_link"));
 
 }
 
@@ -564,7 +582,7 @@ bool Dsp::setSG(Eigen::Vector3d start, Eigen::Vector3d goal){
         and (int) grid_start(1) == (int) grid_goal(1)
         and (int) grid_start(2) == (int) grid_goal(2))
     {
-        ROS_WARN("Start and goal poses are the some");
+        ROS_WARN("Start and goal poses are the same");
         return false;
     }
     if (!gdsl_->SetStart(grid_start))

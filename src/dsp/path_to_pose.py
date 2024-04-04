@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy, time
 #from geometry_msgs.msg import Twist
@@ -23,14 +23,13 @@ class Server:
         #self.vel_msg = Vector3Stamped()
         self.vel_msg = PoseStamped()
 
-#        self.waypoint_subscriber = rospy.Subscriber('/dsp/optpath', Path, self.waypoint_callback)
         self.waypoint_subscriber = rospy.Subscriber('/dsp/path', Path, self.waypoint_callback)
         
+        # need to set odom topic name
         rospy.Subscriber("/odometry/imu", Odometry, self.read_callback)
-        #rospy.Subscriber("/pixy/truth/NWU", Odometry, self.read_callback)
 		
     def waypoint_callback(self, msg):
-        print("geting waypoints")
+        print("getting waypoints")
         print(msg)
         self.wp_index = 0
         self.path = msg
@@ -42,20 +41,13 @@ class Server:
 
     def read_callback(self, msg):
         self.position_messages = msg
-        print("my postition")
+        # print("my position")
         #print(msg)
         if(self.waypoint):
             self.control()
 
     def control(self, current_time=None):
-        print("controler")
-        #if(self.runOnce):
-#			self.x_r = x_c
-#			self.y_r = y_c
-#			self.z_r = z_c
-        #  self.runOnce = False
-
-#        print(self.x_pf)    
+        print("controller")
 
         x_c = self.position_messages.pose.pose.position.x
         y_c = self.position_messages.pose.pose.position.y
@@ -65,7 +57,6 @@ class Server:
         q_z = self.position_messages.pose.pose.orientation.z
         q_w = self.position_messages.pose.pose.orientation.w
 
-# at wp?
         while ((x_c - self.x_r) * (x_c - self.x_r)  + (y_c - self.y_r) * (y_c - self.y_r) < WP_SIZE):
             if(self.wp_index < len(self.path.poses) -1 ):
                 self.wp_index = self.wp_index + 1
@@ -88,8 +79,7 @@ class Server:
             self.vel_msg.pose.position.z = self.z_r
         '''
 
-
-        print("operatin")
+        print("operating")
         self.vel_publisher.publish(self.vel_msg)
         return
 

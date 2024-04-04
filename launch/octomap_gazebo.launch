@@ -12,7 +12,8 @@
 		<param name="resolution" value="0.7" />
 		
 		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
-		<param name="frame_id" type="string" value="odom" />
+		<!-- need to set frame_id as sensor's frame_id -->
+		<param name="frame_id" type="string" value="velodyne" />
 
 		
 		<!-- maximum range to integrate (speedup!) -->
@@ -20,7 +21,8 @@
 		<param name="sensor_model/min_range" value="0.5" />
 		
 		<!-- data source to integrate (PointCloud2) -->
-                <remap from="cloud_in" to="/os_cloud_node/points" />
+		<!-- need to set point cloud topic name -->
+                <remap from="cloud_in" to="/velodyne_points" />
 		<!--remap from="cloud_in" to="/velodyne_points" /-->
 
                 <param name="publish_free_space" value="true"/>

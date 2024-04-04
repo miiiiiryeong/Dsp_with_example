@@ -27,7 +27,9 @@ Build Dsp `catkin build` from your catkin work space.
 
 ## Quickstart / Minimal Setup - Test Completed with test bag
 
-test bag: https://drive.google.com/file/d/1WyqQqnZaze4t7kvjTKv0fsFITi9sENJz/view?usp=sharing
+Test bag: https://drive.google.com/file/d/1WyqQqnZaze4t7kvjTKv0fsFITi9sENJz/view?usp=sharing
+
+In Rviz, you need to set frame_id to "world_shafter".
 
 To use DSL with octomap in gazebo set `frame_id` and `cloud_in` to the map frame used and point-cloud you use in `launch/octomap_gazebo.launch`, make sure you have `tf` configured between the map frame and your odometry. And in dsp_grid3d_gazebo set `odom_topic` to your odometry. And finally, change the odometry topic and position reference topic to match your drone's odometry and controller in `src/dsp/path_to_pose.py`.
 The run:
